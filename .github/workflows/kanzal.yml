@@ -1,0 +1,20 @@
+on:
+  push:
+    branches:
+      - main
+  
+jobs:
+  run_pull:
+    name: run pull
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: install ssh keys
+      run: |
+        install -m 600 -D /dev/null ~/.ssh/id_rsa
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        ssh-keyscan -p 8010 -H 103.83.89.237  > ~/.ssh/known_hosts
+    - name: connect and command
+      run: ssh root@103.83.89.237 -p 8010 "mkdir kanzal"
+    - name: cleanup
+      run: rm -rf ~/.ssh
